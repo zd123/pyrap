@@ -10,6 +10,14 @@ except:
 
 class StyleCreator(object):
     def __init__(self, path_to_text='styles/default.txt'):
+        '''
+        INPUT:  A text file that is the text you want to create your rapper's
+        vocabulary from.
+
+        OUTPUT:  It will save the approipate dictionarys it uses to then create
+        raps as pickled dictionarys.
+        '''
+
         self.path_to_text = path_to_text
         self.text = ''
         with open(path_to_text) as fh:
@@ -17,6 +25,7 @@ class StyleCreator(object):
 
         self.pos_dict = self.create_pos_dict()
         self.mcmc_dict = self.create_mcmc_dict()
+        self.mcmc_dict_unigram = self.create_mcmc_dict_unigram()
 
     def create_pos_dict(self):
         '''
@@ -66,6 +75,7 @@ class StyleCreator(object):
             mcmc_dict[zero].append(one)
 
         filename_to_save_to = self.path_to_text[:-4] + '_mcmc_dict_unigram.pkl'
+        print "saved %s " % filename_to_save_to
         pickle.dump( mcmc_dict, open( filename_to_save_to, "wb" ) )
 
     def create_mcmc_dict(self):
@@ -93,5 +103,4 @@ class StyleCreator(object):
         return mcmc_dict
 
 #
-sc = StyleCreator()
-sc.create_mcmc_dict_unigram()
+# sc = StyleCreator("styles/the_bible.txt")

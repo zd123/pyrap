@@ -11,10 +11,14 @@ except:
    import pickle
 
 class Rapper(object):
-    def __init__(self, pos_style='styles/default_pos_dict.pkl', mcmc_style='styles/default_mcmc_dict.pkl'):
-        self.pos_dict = pickle.load(open( pos_style, "rb" ) )
-        self.mcmc_dict = pickle.load(open( mcmc_style, "rb" ) )
-        self.mcmc_dict_unigram = pickle.load(open( 'styles/default_mcmc_dict_unigram.pkl', "rb" ) )
+    def __init__(self, style='default'):
+        '''
+        INPUT:  The type of style stil you want the rapper to be.
+        The files should be in the style folder.
+        '''
+        self.pos_dict = pickle.load(open( 'styles/' + style + '_pos_dict.pkl', "rb" ) )
+        self.mcmc_dict = pickle.load(open( 'styles/' + style + '_mcmc_dict.pkl', "rb" ) )
+        self.mcmc_dict_unigram = pickle.load(open( 'styles/' + style + '_mcmc_dict_unigram.pkl', "rb" ) )
         print 'Chyeahhh boiiiii!, welcome to pyrapper'
 
     def format_for_pos_spit(self, the_string=''):
@@ -54,7 +58,6 @@ class Rapper(object):
         return final_sentence
 
 
-
     def format_for_mcmc_unigram_spit(self, the_string=''):
         the_string = unicode(the_string, 'utf-8')
         words_shifted_zero = the_string.split(' ')
@@ -66,10 +69,6 @@ class Rapper(object):
         # words_shifted_zero.rotate(0)
         words_shifted_one.rotate(-1)
         lst_of_unigram_tuples = []
-
-        # print words_shifted_one
-        # print "Words_shifte_one above"
-        # print '='*80
 
         for zero, one in zip(words_shifted_zero, words_shifted_one):
             lst_of_unigram_tuples.append((zero))
@@ -89,10 +88,6 @@ class Rapper(object):
         words_shifted_one.rotate(-1)
         lst_of_bigram_tuples = []
 
-        # print words_shifted_one
-        # print "Words_shifte_one above"
-        # print '='*80
-
         for zero, one in zip(words_shifted_zero, words_shifted_one):
             lst_of_bigram_tuples.append( (zero,one) )
         return lst_of_bigram_tuples
@@ -101,16 +96,17 @@ class Rapper(object):
     def mcmc_unigram_spit(self, sentence='We rollin, they hatin'):
         lst_of_unigram_tuples = self.format_for_mcmc_unigram_spit(sentence)
         final_sentence = []
-        # print lst_of_bigram_tuples
-        # print "lst of bigrap tupes above"
-        # print '='*80
+
         for tag in lst_of_unigram_tuples:
             limit = len(self.mcmc_dict_unigram[tag])
+
 
             # If for some reason there are no words associated with a tag, skip it.
             if not limit:
                 continue
 
+            if limit <= 3:
+                continue
             # Chose a random interger index that is within the bounds of the
             # lenght of the limit
             random_choice = np.random.randint(0, limit)
@@ -132,9 +128,7 @@ class Rapper(object):
     def mcmc_spit(self, sentence='We rollin, they hatin'):
         lst_of_bigram_tuples = self.format_for_mcmc_spit(sentence)
         final_sentence = []
-        # print lst_of_bigram_tuples
-        # print "lst of bigrap tupes above"
-        # print '='*80
+
         for tag in lst_of_bigram_tuples:
             limit = len(self.mcmc_dict[tag])
 
@@ -159,17 +153,21 @@ class Rapper(object):
 
         return final_sentence
 
+    def spit(self, sentence='we rollin they hatin cause we ridin dirty'):
+        print "PART OF SPEECH BASED RAP: ",self.pos_spit(sentence), '\n\n'
+        print "BI-GRAM MCMC BASED RAP: ", self.mcmc_spit(sentence), '\n\n'
+        print "UNI-GRAM MCMC BASED RAP: ",self.mcmc_unigram_spit(sentence), '\n\n'
 
 
-rp = Rapper()
-original = "Ohh shit we started up here and now we really doin it my nigga be so hollarin so hard yo"
-print original
-print '-'*80
-print "\noriginal above, computer mcmc rap below"
-print '-'*80
-print rp.mcmc_spit(original)
-print '-'*80
-print "\n pos_rap below"
-print rp.pos_spit(original)
-print "\n unigram mcmc_below"
-print rp.mcmc_unigram_spit(original)
+# rp = Rapper(style='the_bible')
+# original = "grace of our Lord Jesus Christ be with you all. Amen."
+# print original
+# print '-'*80
+# print "\noriginal above, computer mcmc rap below"
+# print '-'*80
+# print rp.mcmc_spit(original)
+# print '-'*80
+# print "\n pos_rap below"
+# print rp.pos_spit(original)
+# print "\n unigram mcmc_below"
+# print rp.mcmc_unigram_spit(original)

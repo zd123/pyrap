@@ -58,11 +58,15 @@ class StyleCreator(object):
 
     def create_mcmc_dict_unigram(self):
         self.text = self.text.encode('ascii', 'ignore')
+
+        blob = TextBlob(self.text)
+        blob = blob.lower()
+
+
         mcmc_dict = defaultdict(list)
 
-        words_shifted_zero = self.text.split(' ')
-        words_shifted_one = self.text.split(' ')
-
+        words_shifted_zero = blob.split(' ')
+        words_shifted_one = blob.split(' ')
 
         words_shifted_zero = deque(words_shifted_zero)
         words_shifted_one = deque(words_shifted_one)
@@ -80,11 +84,15 @@ class StyleCreator(object):
 
     def create_mcmc_dict(self):
         self.text = self.text.encode('ascii', 'ignore')
+
+        blob = TextBlob(self.text)
+        blob = blob.lower()
+
         mcmc_dict = defaultdict(list)
 
-        words_shifted_zero = self.text.split(' ')
-        words_shifted_one = self.text.split(' ')
-        words_shifted_two = self.text.split(' ')
+        words_shifted_zero = blob.split(' ')
+        words_shifted_one = blob.split(' ')
+        words_shifted_two = blob.split(' ')
 
         words_shifted_zero = deque(words_shifted_zero)
         words_shifted_one = deque(words_shifted_one)
@@ -103,4 +111,4 @@ class StyleCreator(object):
         return mcmc_dict
 
 #
-# sc = StyleCreator("styles/the_bible.txt")
+sc = StyleCreator()
